@@ -24,7 +24,7 @@
     "deps:baseline:freeze:audit": "node scripts/ci/npm-audit-baseline.mjs freeze",
     "deps:baseline:check:audit": "node scripts/ci/npm-audit-baseline.mjs check",
     "ci:all": "bash scripts/ci/all.sh",
-    "ci:fast": "bash scripts/ci/fast.sh"
+    "ci:fast": "bash scripts/ci/all.sh --fast"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
