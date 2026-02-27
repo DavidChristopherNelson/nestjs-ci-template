@@ -14,5 +14,5 @@ codeql database create .ci-tmp/codeql-db \
 
 codeql database analyze .ci-tmp/codeql-db \
   --format=sarif-latest \
-  --output=.ci-tmp/codeql-results.sarif \
+  --output=.ci-tmp/codeql.sarif \
   codeql/javascript-queries
