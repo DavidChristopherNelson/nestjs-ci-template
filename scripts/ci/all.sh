@@ -72,7 +72,7 @@ if [ "$MODE" = "full" ]; then
   cs delta
 
   echo "-- [14/16] CodeScene check --"
-  cs check .
+  find src test -name '*.ts' -print0 | xargs -0 -n1 cs check
 
   echo "-- [15/16] CodeQL --"
   bash scripts/ci/codeql-scan.sh
