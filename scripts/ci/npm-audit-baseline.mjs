@@ -13,7 +13,9 @@ const BASELINE_FILE = resolve(BASELINES_DIR, 'audit.json');
 function extractFindings() {
   if (!existsSync(AUDIT_FILE)) {
     console.error(`ERROR: ${AUDIT_FILE} not found.`);
-    console.error('Run "npm audit --json > .ci-tmp/npm-audit-full.json" first.');
+    console.error(
+      'Run "npm audit --json > .ci-tmp/npm-audit-full.json" first.',
+    );
     process.exit(1);
   }
   const raw = JSON.parse(readFileSync(AUDIT_FILE, 'utf8'));
@@ -38,7 +40,9 @@ function freeze() {
   mkdirSync(BASELINES_DIR, { recursive: true });
   const payload = { findings };
   writeFileSync(BASELINE_FILE, JSON.stringify(payload, null, 2) + '\n');
-  console.log(`Baseline frozen: ${findings.length} finding(s) -> ${BASELINE_FILE}`);
+  console.log(
+    `Baseline frozen: ${findings.length} finding(s) -> ${BASELINE_FILE}`,
+  );
 }
 
 function check() {

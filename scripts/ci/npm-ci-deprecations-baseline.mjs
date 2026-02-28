@@ -15,7 +15,9 @@ const DEPRECATION_RE = /^npm warn deprecated\s+(\S+):/i;
 function extractDeprecations() {
   if (!existsSync(LOG_FILE)) {
     console.error(`ERROR: ${LOG_FILE} not found.`);
-    console.error('Run "npm ci" and capture its stderr to .ci-tmp/npm-ci.log first.');
+    console.error(
+      'Run "npm ci" and capture its stderr to .ci-tmp/npm-ci.log first.',
+    );
     process.exit(1);
   }
   const lines = readFileSync(LOG_FILE, 'utf8').split('\n');
@@ -32,7 +34,9 @@ function freeze() {
   mkdirSync(BASELINES_DIR, { recursive: true });
   const payload = { deprecations };
   writeFileSync(BASELINE_FILE, JSON.stringify(payload, null, 2) + '\n');
-  console.log(`Baseline frozen: ${deprecations.length} deprecation(s) -> ${BASELINE_FILE}`);
+  console.log(
+    `Baseline frozen: ${deprecations.length} deprecation(s) -> ${BASELINE_FILE}`,
+  );
 }
 
 function check() {
@@ -52,9 +56,7 @@ function check() {
     console.error(
       `\nBaseline: ${baseline.deprecations.length}, current: ${current.length}.`,
     );
-    console.error(
-      'To accept, run: npm run deps:baseline:freeze:deprecations',
-    );
+    console.error('To accept, run: npm run deps:baseline:freeze:deprecations');
     process.exit(1);
   }
   console.log(
@@ -66,8 +68,6 @@ const mode = process.argv[2];
 if (mode === 'freeze') freeze();
 else if (mode === 'check') check();
 else {
-  console.error(
-    'Usage: node npm-ci-deprecations-baseline.mjs <freeze|check>',
-  );
+  console.error('Usage: node npm-ci-deprecations-baseline.mjs <freeze|check>');
   process.exit(1);
 }

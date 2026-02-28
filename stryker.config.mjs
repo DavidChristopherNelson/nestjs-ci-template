@@ -2,11 +2,7 @@
 const config = {
   testRunner: 'jest',
   ignoreStatic: true,
-  mutate: [
-    'src/**/*.ts',
-    '!src/main.ts',
-    '!src/**/*.module.ts',
-  ],
+  mutate: ['src/**/*.ts', '!src/main.ts', '!src/**/*.module.ts'],
   thresholds: {
     high: 80,
     low: 80,
