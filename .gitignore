@@ -46,6 +46,13 @@ lerna-debug.log*
 .temp
 .tmp
 
+# CI temp artifacts
+.ci-tmp/
+
+# Stryker
+/reports
+.stryker-tmp/
+
 # Runtime data
 pids
 *.pid

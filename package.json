@@ -17,7 +17,14 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "prepare": "husky",
+    "deps:baseline:freeze:deprecations": "node scripts/ci/npm-ci-deprecations-baseline.mjs freeze && npx prettier --write ci-baselines/deprecations.json",
+    "deps:baseline:check:deprecations": "node scripts/ci/npm-ci-deprecations-baseline.mjs check",
+    "deps:baseline:freeze:audit": "node scripts/ci/npm-audit-baseline.mjs freeze && npx prettier --write ci-baselines/audit.json",
+    "deps:baseline:check:audit": "node scripts/ci/npm-audit-baseline.mjs check",
+    "ci:all": "bash scripts/ci/all.sh",
+    "ci:fast": "bash scripts/ci/all.sh --fast"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -61,14 +68,46 @@
       "ts"
     ],
     "rootDir": "src",
+    "setupFiles": [
+      "reflect-metadata"
+    ],
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!main.ts",
+      "!**/*.module.ts",
+      "!**/index.ts",
+      "!**/*.dto.ts",
+      "!**/*.interface.ts",
+      "!**/*.types.ts",
+      "!**/*.enum.ts"
     ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 85,
+        "branches": 85,
+        "functions": 85,
+        "lines": 85
+      },
+      "./**/*.ts": {
+        "statements": 85,
+        "branches": 85,
+        "functions": 85,
+        "lines": 85
+      }
+    },
+    "coverageProvider": "v8",
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "overrides": {
+    "@angular-devkit/core": "19.2.22",
+    "@angular-devkit/schematics": "19.2.22",
+    "@angular-devkit/schematics-cli": "19.2.22",
+    "multer": "2.1.0",
+    "serialize-javascript": "7.0.3"
   }
 }
