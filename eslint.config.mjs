@@ -12,6 +12,7 @@ export default tseslint.config(
       'coverage/',
       'scripts/',
       'stryker.config.mjs',
+      '.ci-tmp/',
     ],
   },
   eslint.configs.recommended,
