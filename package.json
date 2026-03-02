@@ -81,6 +81,8 @@
   "overrides": {
     "@angular-devkit/core": "19.2.22",
     "@angular-devkit/schematics": "19.2.22",
-    "@angular-devkit/schematics-cli": "19.2.22"
+    "@angular-devkit/schematics-cli": "19.2.22",
+    "multer": "2.1.0",
+    "serialize-javascript": "7.0.3"
   }
 }
