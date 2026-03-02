@@ -33,11 +33,21 @@ jobs:
           echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
           "$RUNNER_TEMP/bin/gitleaks" version
 
-      - name: Install CodeScene CLI
+      - name: Install CodeScene CLI (non-interactive)
         run: |
-          curl -sSfL https://downloads.codescene.io/enterprise/cli/install-cs-tool.sh | sh
+          set -euo pipefail
+          mkdir -p "$HOME/.local/bin"
+
+          curl -fsSL \
+            https://downloads.codescene.io/enterprise/cli/cs-linux-amd64-latest.zip \
+            -o /tmp/cs.zip
+
+          unzip -q /tmp/cs.zip -d /tmp/cs
+          chmod +x /tmp/cs/cs
+          mv /tmp/cs/cs "$HOME/.local/bin/cs"
+
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-          "$HOME/.local/bin/cs" version
+          cs version
 
       - name: Install CodeQL bundle
         run: |
