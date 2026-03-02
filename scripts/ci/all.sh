@@ -29,44 +29,53 @@ if [ "$MODE" = "full" ] && [ -z "${CS_ACCESS_TOKEN:-}" ]; then
 fi
 
 # ---------------------------------------------------------------------------
+gitleaks_scan() {
+  if git rev-parse --verify origin/main &>/dev/null; then
+    gitleaks git --exit-code 1 --log-opts "origin/main..HEAD" .
+  else
+    echo "(origin/main not found — falling back to full-history scan)"
+    gitleaks git --exit-code 1 .
+  fi
+}
+
 if [ "$MODE" = "full" ]; then
   echo "===== Full Gate ====="
 
   echo "-- [1/16] mkdir -p .ci-tmp ci-baselines --"
   mkdir -p .ci-tmp ci-baselines
 
-  echo "-- [2/16] npm ci --"
+  echo "-- [2/16] Gitleaks --"
+  gitleaks_scan
+
+  echo "-- [3/16] npm ci --"
   npm ci 2>&1 | tee .ci-tmp/npm-ci.log
 
-  echo "-- [3/16] npm audit --"
+  echo "-- [4/16] npm audit --"
   npm audit --json > .ci-tmp/npm-audit-full.json
 
-  echo "-- [4/16] Deprecation baseline check --"
+  echo "-- [5/16] Deprecation baseline check --"
   npm run deps:baseline:check:deprecations
 
-  echo "-- [5/16] Audit baseline check --"
+  echo "-- [6/16] Audit baseline check --"
   npm run deps:baseline:check:audit
 
-  echo "-- [6/16] Prettier --"
+  echo "-- [7/16] Prettier --"
   npx prettier --check .
 
-  echo "-- [7/16] ESLint --"
+  echo "-- [8/16] ESLint --"
   npx eslint . --max-warnings=0 --report-unused-disable-directives
 
-  echo "-- [8/16] TypeScript --"
+  echo "-- [9/16] TypeScript --"
   npx tsc --noEmit
 
-  echo "-- [9/16] Build --"
+  echo "-- [10/16] Build --"
   npm run build
 
-  echo "-- [10/16] Unit tests --"
+  echo "-- [11/16] Unit tests --"
   npm test
 
-  echo "-- [11/16] Coverage --"
+  echo "-- [12/16] Coverage --"
   npm run test:cov
-
-  echo "-- [12/16] Gitleaks --"
-  gitleaks git --exit-code 1 .
 
   echo "-- [13/16] CodeScene delta --"
   cs delta
@@ -87,23 +96,23 @@ else
   echo "-- [1/7] mkdir -p .ci-tmp ci-baselines --"
   mkdir -p .ci-tmp ci-baselines
 
-  echo "-- [2/7] npm ci --"
+  echo "-- [2/7] Gitleaks --"
+  gitleaks_scan
+
+  echo "-- [3/7] npm ci --"
   npm ci 2>&1 | tee .ci-tmp/npm-ci.log
 
-  echo "-- [3/7] Prettier --"
+  echo "-- [4/7] Prettier --"
   npx prettier --check .
 
-  echo "-- [4/7] ESLint --"
+  echo "-- [5/7] ESLint --"
   npx eslint . --max-warnings=0 --report-unused-disable-directives
 
-  echo "-- [5/7] TypeScript --"
+  echo "-- [6/7] TypeScript --"
   npx tsc --noEmit
 
-  echo "-- [6/7] Unit tests --"
+  echo "-- [7/7] Unit tests --"
   npm test
-
-  echo "-- [7/7] Gitleaks --"
-  gitleaks git --exit-code 1 .
 
   echo "===== Fast Gate PASSED ====="
 fi
